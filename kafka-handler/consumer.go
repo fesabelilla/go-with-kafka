@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func Consumer(ctx context.Context) {
+func Consumer() {
 	// create a new logger that outputs to stdout
 	// and has the `kafka reader` prefix
 	l := log.New(os.Stdout, "kafka reader: ", 0)
@@ -24,7 +24,7 @@ func Consumer(ctx context.Context) {
 	})
 	for {
 		// the `ReadMessage` method blocks until we receive the next event
-		msg, err := r.ReadMessage(ctx)
+		msg, err := r.ReadMessage(context.Background())
 		if err != nil {
 			panic("could not read message " + err.Error())
 		}
