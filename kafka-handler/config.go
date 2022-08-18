@@ -4,24 +4,17 @@ import (
 	"context"
 	"github.com/segmentio/kafka-go"
 	"log"
-)
-
-const (
-	topic         = "message-log"
-	brokerAddress = "localhost:9092"
-	partition     = 0
+	"project/config"
 )
 
 var writer *kafka.Conn
 
 func Configure() (w *kafka.Writer, err error) {
-	conn, err := kafka.DialLeader(context.Background(), "tcp", brokerAddress, topic, partition)
+	connection, err := kafka.DialLeader(context.Background(), "tcp", config.GetEnv().BrokerAddress, config.GetEnv().Topic, config.GetEnv().Partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
 
-	//conn.SetWriteDeadline(time.Now().Add(time.Hour))
-
-	writer = conn
+	writer = connection
 	return w, nil
 }

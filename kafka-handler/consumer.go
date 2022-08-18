@@ -6,6 +6,7 @@ import (
 	"github.com/segmentio/kafka-go"
 	"log"
 	"os"
+	"project/config"
 )
 
 func Consumer() {
@@ -16,9 +17,9 @@ func Consumer() {
 	// the groupID identifies the consumer and prevents
 	// it from receiving duplicate messages
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{brokerAddress},
-		Topic:   topic,
-		GroupID: "my-group",
+		Brokers: []string{config.GetEnv().BrokerAddress},
+		Topic:   config.GetEnv().Topic,
+		GroupID: config.GetEnv().GroupId,
 		// assign the logger to the reader
 		Logger: l,
 	})
