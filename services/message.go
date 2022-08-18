@@ -3,9 +3,10 @@ package services
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"project/dtos"
 	kafka_handler "project/kafka-handler"
-	"project/src/message/dtos"
 )
 
 func init() {
@@ -22,7 +23,13 @@ func PublishMessage(context *gin.Context) {
 	}
 
 	fmt.Println(newMessage)
-	kafka_handler.Produce(context, newMessage.Body)
 
-	context.JSON(http.StatusOK, nil)
+	if err = kafka_handler.Produce(context, newMessage.Body); err != nil {
+		log.Fatal("failed to write messages:", err)
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"Message": "Message send Successfully",
+	})
 }
